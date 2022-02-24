@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import Table from "./components/Table/Table";
+import Modal from "./components/UI/Modal/Modal";
+import { useModal } from "./contexts/ModalContext";
+import { useState } from "react";
 
-function App() {
+const App = () => {
+  const [tableRows, setTableRows] = useState([]);
+  const { toggleModal } = useModal();
+  const onSubmitForm = (object) => {
+    setTableRows((prevState) => [...prevState, object]);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ position: "relative" }} className="App">
+      <Table setTableRows={setTableRows} rows={tableRows} />
+      {toggleModal && <Modal handleSubmit={onSubmitForm} />}
     </div>
   );
-}
+};
 
 export default App;

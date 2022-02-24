@@ -1,0 +1,130 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "Poppins", sans-serif;
+}
+.app-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table th,
+table td {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 1rem;
+  min-height: 40px;
+}
+
+th {
+  background-color: darkblue;
+  color: #fff;
+}
+
+td {
+  background-color: rgb(205, 235, 253);
+}
+
+td:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  min-height: 90px;
+}
+.inn__field {
+  position: relative;
+}
+.search__inn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  background-color: #a9a9a9;
+  border-radius: 5px;
+  left: 50%;
+  top: 110%;
+  z-index: 30;
+}
+.search__inn button {
+  width: 100px;
+  padding: 0.5rem;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background-color: #0fafe9;
+  color: white;
+}
+.search__inn input {
+  outline: none;
+  border: 1px solid;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+.button__container {
+  display: flex;
+  justify-content: center;
+  gap: 10rem;
+  position: relative;
+}
+.toggle__inn {
+  width: 100px;
+  position: relative;
+  padding: 0.5rem;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background-color: #0fafe9;
+  color: white;
+}
+@media screen and (max-width: 768px) {
+  .button__container {
+    position: fixed;
+    z-index: 30;
+    left: 10%;
+  }
+  table thead {
+    display: none;
+  }
+  table,
+  table tbody,
+  table tr,
+  table td {
+    display: block;
+    width: 100%;
+  }
+  table tr {
+    margin-bottom: 15px;
+  }
+  table td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 2%;
+    width: 50%;
+    font-weight: bold;
+    text-align: left;
+    font-size: 1rem;
+  }
+}
