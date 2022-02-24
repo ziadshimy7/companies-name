@@ -11,7 +11,7 @@ const Table = ({ rows }) => {
   const { setToggleModal } = useModal();
   const { tableRows, setTableRows } = useData();
   const removeCompanyHandler = (rowID) => {
-    const deletedRowArr = rows.filter((row) => row.id !== rowID);
+    const deletedRowArr = tableRows.filter((row) => row.id !== rowID);
     setTableRows([...deletedRowArr]);
   };
   const fetchData = async () => {
