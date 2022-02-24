@@ -1,17 +1,16 @@
 import Table from "./components/Table/Table";
 import Modal from "./components/UI/Modal/Modal";
 import { useModal } from "./contexts/ModalContext";
-import { useState } from "react";
-
+import { useData } from "./contexts/RowsContext";
 const App = () => {
-  const [tableRows, setTableRows] = useState([]);
   const { toggleModal } = useModal();
+  const { setTableRows } = useData();
   const onSubmitForm = (object) => {
     setTableRows((prevState) => [...prevState, object]);
   };
   return (
     <div style={{ position: "relative" }} className="App">
-      <Table setTableRows={setTableRows} rows={tableRows} />
+      <Table />
       {toggleModal && <Modal handleSubmit={onSubmitForm} />}
     </div>
   );

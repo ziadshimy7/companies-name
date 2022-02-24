@@ -1,13 +1,15 @@
-import React, { useState, Suspense, useEffect, useCallback } from "react";
+import React, { useState, Suspense, useCallback } from "react";
 import Button from "../UI/Button/Button";
 import styles from "./Table.module.css";
 import { useModal } from "../../contexts/ModalContext";
 import Rows from "./Rows";
-const Table = ({ rows, setTableRows }) => {
+import { useData } from "../../contexts/RowsContext";
+const Table = ({ rows }) => {
   const [toggleDisplayINN, setToggleDisplayINN] = useState(false);
   const [innData, setINNData] = useState([]);
   const [innQuery, setINNQuery] = useState("");
   const { setToggleModal } = useModal();
+  const { tableRows, setTableRows } = useData();
   const removeCompanyHandler = (rowID) => {
     const deletedRowArr = rows.filter((row) => row.id !== rowID);
     setTableRows([...deletedRowArr]);
@@ -102,13 +104,12 @@ const Table = ({ rows, setTableRows }) => {
         <tbody>
           <Suspense fallback="Loading...">
             {innData &&
-              rows.length > 0 &&
-              rows?.map((row, index) => (
+              tableRows?.map((row, index) => (
                 <Rows
                   key={index}
                   row={row}
                   setTableRows={setTableRows}
-                  rows={rows}
+                  rows={tableRows}
                   removeCompanyHandler={removeCompanyHandler}
                 />
               ))}
