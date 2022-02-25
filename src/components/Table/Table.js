@@ -29,14 +29,14 @@ const Table = () => {
       };
       const resultsJson = await fetch(url, options);
       const results = await resultsJson.json();
-      const resultsTransformed = await addINNRow(results.suggestions);
+      const resultsTransformed = addINNRow(results.suggestions);
       setTableRows((prevState) => [...prevState, ...resultsTransformed]);
       setIsLoading(false);
     } catch (err) {
       console.log(err);
     }
   };
-  const addINNRow = async (innDataFetched) => {
+  const addINNRow = (innDataFetched) => {
     const newCompanies = innDataFetched?.map((company, index) => {
       return {
         id: new Date().getTime() + index,
@@ -102,7 +102,7 @@ const Table = () => {
         </thead>
         <tbody>
           {!isLoading &&
-            tableRows.map((row, index) => (
+            tableRows?.map((row, index) => (
               <Rows
                 key={index}
                 row={row}
