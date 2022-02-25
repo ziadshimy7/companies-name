@@ -1,21 +1,21 @@
-import React, { useState, Suspense, useCallback } from "react";
+import React, { useState } from "react";
 import Button from "../UI/Button/Button";
 import styles from "./Table.module.css";
 import { useModal } from "../../contexts/ModalContext";
 import Rows from "./Rows";
 import { useData } from "../../contexts/RowsContext";
-const Table = ({ rows }) => {
-  const [toggleDisplayINN, setToggleDisplayINN] = useState(false);
-  const [innData, setINNData] = useState([]);
+const Table = () => {
+  const [toggleDisplayINN, setToggleDisplayINN] = useState(true);
   const [innQuery, setINNQuery] = useState("");
   const { setToggleModal } = useModal();
-  const { tableRows, setTableRows } = useData();
+  const { tableRows, setTableRows, isLoading, setIsLoading } = useData();
   const removeCompanyHandler = (rowID) => {
     const deletedRowArr = tableRows.filter((row) => row.id !== rowID);
     setTableRows([...deletedRowArr]);
   };
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const url = `https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party?query=${innQuery}`;
       const token = "c40fef3d1609f56aa0cc22d49aa5c5b1ef5b3dcf";
       const options = {
@@ -27,17 +27,17 @@ const Table = ({ rows }) => {
           Authorization: "Token " + token,
         },
       };
-      fetch(url, options)
-        .then((responseJson) => responseJson.json())
-        .then((results) => {
-          setINNData(results.suggestions);
-        });
+      const resultsJson = await fetch(url, options);
+      const results = await resultsJson.json();
+      const resultsTransformed = await addINNRow(results.suggestions);
+      setTableRows((prevState) => [...prevState, ...resultsTransformed]);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
     }
   };
-  const addINNRow = useCallback(() => {
-    const newCompanies = innData?.map((company, index) => {
+  const addINNRow = async (innDataFetched) => {
+    const newCompanies = innDataFetched?.map((company, index) => {
       return {
         id: new Date().getTime() + index,
         name: company.value,
@@ -50,8 +50,8 @@ const Table = ({ rows }) => {
           .join("-"),
       };
     });
-    setTableRows((prevState) => [...prevState, ...newCompanies]);
-  }, [innData, setTableRows]);
+    return newCompanies;
+  };
   return (
     <div className={styles["app-container"]}>
       <div className={styles["button__container"]}>
@@ -81,7 +81,6 @@ const Table = ({ rows }) => {
             <button
               onClick={async () => {
                 fetchData();
-                addINNRow();
               }}
             >
               Загрузить
@@ -102,18 +101,15 @@ const Table = ({ rows }) => {
           </tr>
         </thead>
         <tbody>
-          <Suspense fallback="Loading...">
-            {innData &&
-              tableRows?.map((row, index) => (
-                <Rows
-                  key={index}
-                  row={row}
-                  setTableRows={setTableRows}
-                  rows={tableRows}
-                  removeCompanyHandler={removeCompanyHandler}
-                />
-              ))}
-          </Suspense>
+          {!isLoading &&
+            tableRows.map((row, index) => (
+              <Rows
+                key={index}
+                row={row}
+                setTableRows={setTableRows}
+                removeCompanyHandler={removeCompanyHandler}
+              />
+            ))}
         </tbody>
       </table>
     </div>
